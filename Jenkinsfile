@@ -11,4 +11,16 @@ pipeline {
     stage('Generate Coverage')   { steps { sh 'npm run coverage || true' } }
     stage('NPM Audit')           { steps { sh 'npm audit || true' } }
   }
+stage('SonarCloud Analysis') {
+      environment { SONAR_TOKEN = credentials('SONAR_TOKEN') }
+      steps {
+        sh '''
+          SCAN_VER=5.0.1.3006
+          curl -L -o scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SCAN_VER-linux.zip
+          rm -rf sonar-scanner && unzip -q scanner.zip && mv sonar-scanner-* sonar-scanner
+          ./sonar-scanner/bin/sonar-scanner
+        '''
+      }
+    }
+  }
 }
