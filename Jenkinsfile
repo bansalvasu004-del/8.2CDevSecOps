@@ -16,7 +16,7 @@ pipeline {
 
     stage('Run Tests') {
       steps {
-        sh 'npm test || true'
+        sh 'npm test || true'   // keep pipeline going even if tests fail
       }
     }
 
@@ -29,6 +29,18 @@ pipeline {
     stage('NPM Audit (Security Scan)') {
       steps {
         sh 'npm audit || true'
+      }
+    }
+
+    // --- Debug stage to verify Sonar props & token injection ---
+    stage('Debug Sonar Props') {
+      environment { SONAR_TOKEN = credentials('SONAR_TOKEN') }
+      steps {
+        sh '''
+          echo "ORG=" $(grep '^sonar.organization=' sonar-project.properties | cut -d= -f2-)
+          echo "KEY=" $(grep '^sonar.projectKey='  sonar-project.properties | cut -d= -f2-)
+          echo "TOKEN SET? ${SONAR_TOKEN:+yes}"   # should print "yes" (value masked)
+        '''
       }
     }
 
