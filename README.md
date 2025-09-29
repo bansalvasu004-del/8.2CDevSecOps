@@ -212,3 +212,5 @@ snyk wizard
 
 In this application, the default `snyk wizard` answers will fix all the issues.
 When the wizard is done, restart the application and run the exploits again to confirm they are fixed.
+
+_Last updated: Testing Jenkins integration on 29 Sept 2025_
